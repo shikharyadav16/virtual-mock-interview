@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TITLE– Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --secondary: #d79e34;
+      --bg-main: #f2f5f7;
+      --card-bg: #ffffff;
+      --accent: #d79e34;
+      --accent-soft: #d9c26f;
+      --border: #d1d5db;
+      --text-main: #271911;
+      --text-muted: #5c6638;
+      --danger: #dc2626;
+      --input-bg: #ffffff;
+      --shadow-soft: 0 20px 45px rgba(42, 41, 15, 0.12);
+      --radius-xl: 18px;
+      --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card-bg);
+      border-radius: 26px;
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      overflow: hidden;
+    }
+
+    /* LEFT PANEL – FORM */
+    .left-panel {
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e0f2f1;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .welcome-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    form {
+      width: 100%;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      display: inline-block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .input-wrapper {
+      position: relative;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      transition: border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(128, 115, 0, 0.3);
+    }
+
+    .input-icon {
+      font-size: 14px;
+      margin-right: 8px;
+      color: var(--text-muted);
+    }
+
+    .field-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 11px 0;
+      font-size: 14px;
+      background: transparent;
+    }
+
+    .toggle-password {
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .error-text {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--danger);
+      min-height: 14px;
+    }
+
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .forgot-link {
+      font-size: 12px;
+      color: var(--accent-soft);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-primary {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      padding: 11px 0;
+      border-radius: 11px;
+      margin-top: 4px;
+      transition: background var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+      box-shadow: 0 4px 5px rgba(59, 82, 0, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-soft);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 16px rgba(0, 79, 82, 0.25);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 18px 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider span {
+      margin: 0 10px;
+    }
+
+    .btn-social {
+      width: 100%;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: background var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .btn-social + .btn-social {
+      margin-top: 10px;
+    }
+
+    .btn-social:hover {
+      background: #f9fafb;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 14px rgba(15, 23, 42, 0.1);
+    }
+
+    .social-icon {
+      font-size: 16px;
+    }
+
+    .signup-text {
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .signup-text a {
+      color: var(--accent-soft);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .signup-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* RIGHT PANEL – MARKETING */
+    .right-panel {
+      padding: 40px 44px;
+      background: radial-gradient(circle at top left, #d79e34, #b38123);
+      color: #f9fafb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .right-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at 10% 0%,
+        rgba(255, 255, 255, 0.2),
+        transparent 55%
+      );
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .right-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .hero-title {
+      font-size: 30px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      max-width: 310px;
+      color: #f5fad1;
+      margin-bottom: 26px;
+    }
+
+    .quote-mark {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .testimonial-text {
+      font-size: 14px;
+      color: #e5e7eb;
+      max-width: 345px;
+      margin: 8px 0 18px;
+    }
+
+    .testimonial-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4b5563;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .user-role {
+      font-size: 12px;
+      color: #e4e4e4;
+    }
+
+    .logo-section {
+      margin-top: 26px;
+    }
+
+    .logo-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #efefef;
+    }
+
+    .logo-row {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      row-gap: 10px;
+    }
+
+    .partner-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      background: rgba(42, 35, 15, 0.138);
+      font-size: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      white-space: nowrap;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 880px) {
+      .page-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .right-panel {
+        display: none; /* hide on small screens; you can change to stack if you want */
+      }
+    }
+
+    @media (max-width: 520px) {
+      .left-panel {
+        padding: 28px 20px 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- LEFT: LOGIN FORM -->
+    <div class="left-panel">
+      <div>
+        <div class="brand">
+          <div class="brand-logo">{ }</div>
+          <div class="brand-name">Title</div>
+        </div>
+
+        <h1 class="welcome-title">Welcome Back!</h1>
+        <p class="welcome-subtitle">
+          Sign in to access your dashboard and continue optimizing your QA
+          process.
+        </p>
+
+        <form id="loginForm" novalidate>
+          <!-- Email -->
+          <div class="field">
+            <label class="field-label" for="email">Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">@</span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                class="field-input"
+                autocomplete="email"
+              />
+            </div>
+            <div class="error-text" id="emailError"></div>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <div class="field-row">
+              <label class="field-label" for="password">Password</label>
+              <a class="forgot-link" id="forgotPasswordLink">Forgot Password?</a>
+            </div>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                class="field-input"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                id="togglePassword"
+                aria-label="Show password"
+              >
+                👁
+              </button>
+            </div>
+            <div class="error-text" id="passwordError"></div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-primary" id="signInBtn">
+            Sign In
+          </button>
+
+          <!-- OR divider -->
+          <div class="divider">
+            <span>OR</span>
+          </div>
+
+          <!-- Social logins -->
+          <button
+            type="button"
+            class="btn-social"
+            data-provider="Google"
+          >
+            <span class="social-icon">🟢</span>
+            <span>Continue with Google</span>
+          </button>
+
+         
+           
+
+          <p class="signup-text">
+            Don’t have an account?
+            <a href="#">Sign Up</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: MARKETING PANEL -->
+    <div class="right-panel">
+      <div class="right-inner">
+        <div>
+          <h2 class="hero-title">Revolutionize Interview with<br />AI Automation Mock Interviews</h2>
+          <div class="quote-mark"></div>
+          <p class="testimonial-text">
+            SoftQA has completely transformed our testing process. It’s reliable,
+            efficient, and ensures our releases are always top-notch.
+          </p>
+          <div class="testimonial-user">
+            <div class="avatar">SY</div>
+            <div class="user-meta">
+              <span class="user-name">Shikhar Yadav</span>
+              <span class="user-role">Software Engineer at PSIT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="logo-section">
+          <p class="logo-title">Join Early</p>
+          <div class="logo-row">
+            <span class="partner-pill">Discord</span>
+            <span class="partner-pill">Github</span>
+            <span class="partner-pill">Linkedin</span>
+           <span class="partner-pill">Twitter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT FUNCTIONALITY -->
+  <script>
+    // Grab elements
+    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const emailError = document.getElementById("emailError");
+    const passwordError = document.getElementById("passwordError");
+    const togglePasswordBtn = document.getElementById("togglePassword");
+    const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+    const signInBtn = document.getElementById("signInBtn");
+    const socialButtons = document.querySelectorAll(".btn-social");
+
+    // Basic email regex for demo purposes
+    function isValidEmail(email) {
+      return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    }
+
+    // Show error helper
+    function showError(element, message) {
+      element.textContent = message;
+    }
+
+    // Clear all errors
+    function clearErrors() {
+      showError(emailError, "");
+      showError(passwordError, "");
+    }
+
+    // Form submit handler
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault(); // prevent page reload for this demo
+      clearErrors();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      let hasError = false;
+
+      // Email validation
+      if (!email) {
+        showError(emailError, "Email is required.");
+        hasError = true;
+      } else if (!isValidEmail(email)) {
+        showError(emailError, "Please enter a valid email address.");
+        hasError = true;
+      }
+
+      // Password validation
+      if (!password) {
+        showError(passwordError, "Password is required.");
+        hasError = true;
+      } else if (password.length < 6) {
+        showError(passwordError, "Password must be at least 6 characters.");
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Simulated sign-in – here you would call your backend / API
+      signInBtn.disabled = true;
+      signInBtn.textContent = "Signing In...";
+
+      setTimeout(() => {
+        alert("Login successful (demo). Here you would redirect to dashboard.");
+        signInBtn.disabled = false;
+        signInBtn.textContent = "Sign In";
+      }, 1000);
+    });
+
+    // Toggle password visibility
+    togglePasswordBtn.addEventListener("click", function () {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      togglePasswordBtn.textContent = isPassword ? "🙈" : "👁";
+      togglePasswordBtn.setAttribute(
+        "aria-label",
+        isPassword ? "Hide password" : "Show password"
+      );
+    });
+
+    // Forgot password
+    forgotPasswordLink.addEventListener("click", function () {
+      // In real app: navigate to reset page or open modal
+      alert("Password reset flow goes here (demo).");
+    });
+
+    // Social login buttons
+    socialButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const provider = btn.getAttribute("data-provider");
+        // In real app: redirect to OAuth endpoint
+        alert(`Redirecting to ${provider} OAuth (demo).`);
+      });
+    });
+  </script>
+</body>
+</html>
