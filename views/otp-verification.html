@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --secondary: #d79e34;
+            --bg-main: #f2f5f7;
+            --card-bg: #ffffff;
+            --accent: #d79e34;
+            --accent-soft: #d9c26f;
+            --border: #d1d5db;
+            --text-main: #271911;
+            --text-muted: #5c6638;
+            --danger: #dc2626;
+            --input-bg: #ffffff;
+            --shadow-soft: 0 20px 45px rgba(42, 41, 15, 0.12);
+            --radius-xl: 18px;
+            --transition-fast: 0.18s ease-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            transition: transform var(--transition-fast);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .logo {
+            color: var(--accent);
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .phone-number {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .otp-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 35px 0 40px;
+        }
+
+        .otp-input {
+            width: 56px;
+            height: 68px;
+            font-size: 2rem;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            font-weight: 600;
+            transition: all var(--transition-fast);
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .otp-input.filled {
+            border-color: var(--accent);
+            background-color: rgba(215, 158, 52, 0.05);
+        }
+
+        .otp-input.error {
+            border-color: var(--danger);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
+        .verify-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all var(--transition-fast);
+            margin-bottom: 25px;
+        }
+
+        .verify-btn:hover {
+            background-color: #c28a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(215, 158, 52, 0.2);
+        }
+
+        .verify-btn:active {
+            transform: translateY(0);
+        }
+
+        .verify-btn:disabled {
+            background-color: var(--border);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .resend-section {
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+            padding: 5px;
+        }
+
+        .resend-btn:hover {
+            color: #c28a2e;
+            text-decoration: underline;
+        }
+
+        .resend-btn:disabled {
+            color: var(--border);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .timer {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+            display: block;
+        }
+
+        .message.error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #d32f2f;
+            border-left: 4px solid var(--danger);
+            display: block;
+        }
+
+        .message.info {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: #1565c0;
+            border-left: 4px solid #2196f3;
+            display: block;
+        }
+
+        .hint {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hint i {
+            color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 30px 25px;
+            }
+            
+            .otp-input {
+                width: 46px;
+                height: 58px;
+                font-size: 1.7rem;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            
+            <h1>Verify Your Account</h1>
+            <p class="subtitle">We've sent a 6-digit verification code to <span class="phone-number">__email__</span></p>
+            
+            <div id="message" class="message"></div>
+            
+            <div class="otp-container">
+                <input type="text" class="otp-input" maxlength="1" data-index="1" inputmode="numeric" autofocus>
+                <input type="text" class="otp-input" maxlength="1" data-index="2" inputmode="numeric">
+                <input type="text" class="otp-input" maxlength="1" data-index="3" inputmode="numeric">
+                <input type="text" class="otp-input" maxlength="1" data-index="4" inputmode="numeric">
+                <input type="text" class="otp-input" maxlength="1" data-index="5" inputmode="numeric">
+                <input type="text" class="otp-input" maxlength="1" data-index="6" inputmode="numeric">
+            </div>
+            
+            <button class="verify-btn" id="verifyBtn" disabled>Verify Code</button>
+            
+            <div class="resend-section">
+                <p>Didn't receive the code? 
+                    <button class="resend-btn" id="resendBtn">Resend OTP</button>
+                    <span id="timer">(<span class="timer">60</span>s)</span>
+                </p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Need help? <a href="#" style="color: var(--accent); text-decoration: none;">Contact Support</a></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const verifyBtn = document.getElementById('verifyBtn');
+            const resendBtn = document.getElementById('resendBtn');
+            const messageEl = document.getElementById('message');
+            const timerEl = document.querySelector('.timer');
+            let timer = 60;
+            let countdown;
+            
+            // Predefined OTP for demo (in a real app, this would come from backend)
+            const correctOTP = "123456";
+            
+            // Start countdown timer for resend OTP
+            function startTimer() {
+                clearInterval(countdown);
+                timer = 60;
+                timerEl.textContent = timer;
+                resendBtn.disabled = true;
+                
+                countdown = setInterval(() => {
+                    timer--;
+                    timerEl.textContent = timer;
+                    
+                    if (timer <= 0) {
+                        clearInterval(countdown);
+                        resendBtn.disabled = false;
+                        timerEl.textContent = "0";
+                    }
+                }, 1000);
+            }
+            
+            // Handle OTP input
+            otpInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    const index = parseInt(this.dataset.index);
+                    
+                    // Only allow numbers
+                    if (!/^\d*$/.test(value)) {
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // If a digit is entered, move to next input
+                    if (value.length === 1 && index < 6) {
+                        otpInputs[index].focus();
+                    }
+                    
+                    // Update UI
+                    updateInputUI();
+                    updateVerifyButton();
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    const index = parseInt(this.dataset.index);
+                    
+                    if (e.key === 'Backspace' && this.value === '' && index > 1) {
+                        otpInputs[index - 2].focus();
+                    }
+                });
+                
+                // Handle paste event
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text/plain').trim();
+                    
+                    // Check if pasted content is a 6-digit number
+                    if (/^\d{6}$/.test(pastedData)) {
+                        // Fill all inputs with the pasted OTP
+                        for (let i = 0; i < 6; i++) {
+                            otpInputs[i].value = pastedData[i];
+                        }
+                        
+                        // Update UI and focus the last input
+                        updateInputUI();
+                        updateVerifyButton();
+                        otpInputs[5].focus();
+                        
+                        showMessage("OTP pasted successfully!", "success");
+                    } else {
+                        showMessage("Please paste a valid 6-digit OTP", "error");
+                    }
+                });
+            });
+            
+            // Update input UI based on filled status
+            function updateInputUI() {
+                otpInputs.forEach(input => {
+                    if (input.value) {
+                        input.classList.add('filled');
+                        input.classList.remove('error');
+                    } else {
+                        input.classList.remove('filled');
+                    }
+                });
+            }
+            
+            // Update verify button state
+            function updateVerifyButton() {
+                const otp = getOTP();
+                verifyBtn.disabled = otp.length !== 6;
+            }
+            
+            // Get the complete OTP from inputs
+            function getOTP() {
+                let otp = '';
+                otpInputs.forEach(input => {
+                    otp += input.value;
+                });
+                return otp;
+            }
+            
+            // Show message
+            function showMessage(text, type) {
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                
+                // Auto-hide success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        messageEl.className = 'message';
+                    }, 5000);
+                }
+            }
+            
+            // Verify OTP
+            verifyBtn.addEventListener('click', function() {
+                const otp = getOTP();
+                
+                if (otp.length !== 6) {
+                    showMessage("Please enter all 6 digits", "error");
+                    return;
+                }
+                
+                // Show loading state
+                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                verifyBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    if (otp === correctOTP) {
+                        showMessage("Verification successful! Redirecting...", "success");
+                        verifyBtn.innerHTML = '<i class="fas fa-check"></i> Verified Successfully';
+                        
+                        // In a real app, you would redirect to another page
+                        setTimeout(() => {
+                            showMessage("This is a demo. In a real app, you would be redirected now.", "info");
+                        }, 1500);
+                    } else {
+                        showMessage("Invalid OTP. Please try again.", "error");
+                        verifyBtn.innerHTML = 'Verify Code';
+                        verifyBtn.disabled = false;
+                        
+                        // Add error styling to inputs
+                        otpInputs.forEach(input => {
+                            input.classList.add('error');
+                        });
+                    }
+                }, 1500);
+            });
+            
+            // Resend OTP
+            resendBtn.addEventListener('click', function() {
+                // Show sending state
+                resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                
+                // Simulate API call
+                setTimeout(() => {
+                    showMessage("A new OTP has been sent to your phone", "success");
+                    resendBtn.innerHTML = 'Resend OTP';
+                    
+                    // Clear inputs and reset focus
+                    otpInputs.forEach(input => {
+                        input.value = '';
+                        input.classList.remove('filled', 'error');
+                    });
+                    
+                    otpInputs[0].focus();
+                    updateVerifyButton();
+                    
+                    // Start the timer again
+                    startTimer();
+                }, 1200);
+            });
+            
+            // Initialize the page
+            startTimer();
+            otpInputs[0].focus();
+            
+            // Demo: Show info message about the demo OTP
+            setTimeout(() => {
+                showMessage(`Demo OTP: ${correctOTP}`, "info");
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
