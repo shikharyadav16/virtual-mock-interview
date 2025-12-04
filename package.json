@@ -1,7 +1,29 @@
 {
+  "name": "ai-interview-platform",
+  "version": "1.0.0",
+  "description": "",
+  
+  "main": "index.js",
+
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"No tests yet\""
   },
+
+  "keywords": [
+    "express",
+    "mongoose",
+    "nodemailer",
+    "jwt",
+    "ejs",
+    "nodejs",
+    "classroom-app"
+  ],
+
+  "author": "",
+  "license": "MIT",
+
   "dependencies": {
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
@@ -9,5 +31,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^9.0.0",
     "nodemailer": "^7.0.11"
+  },
+
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
